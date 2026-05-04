@@ -5,9 +5,9 @@ export const siteConfig = {
   ogImage: "https://nexus.agency/og.jpg",
   links: {
     telegram: "https://t.me/nexus_agency",
-    whatsapp: "https://wa.me/77001234567",
+    whatsapp: "https://wa.me/77019204449",
     email: "hello@nexus.agency",
-    phone: "+7 (700) 123-45-67",
+    phone: "+7 (701) 920-4449",
   },
   address: {
     city: "Алматы",
