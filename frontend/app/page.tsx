@@ -6,8 +6,11 @@ import { AdvantagesSection } from "@/components/sections/advantages"
 import { TestimonialsSection } from "@/components/sections/testimonials"
 import { FAQSection } from "@/components/sections/faq"
 import { CTASection } from "@/components/sections/cta"
+import { getStatus } from '@/lib/api'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const status = await getStatus()
+  if (status) console.log('backend status:', status)
   return (
     <>
       <HeroSection />
