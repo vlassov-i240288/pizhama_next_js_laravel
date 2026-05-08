@@ -4,7 +4,7 @@ export const siteConfig = {
   url: "https://nexus.agency",
   ogImage: "https://nexus.agency/og.jpg",
   links: {
-    telegram: "https://t.me/nexus_agency",
+    telegram: "https://t.me/Vlassov_I",
     whatsapp: "https://wa.me/77019204449",
     email: "hello@nexus.agency",
     phone: "+7 (701) 920-4449",

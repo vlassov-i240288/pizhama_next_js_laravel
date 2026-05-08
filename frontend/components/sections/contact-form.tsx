@@ -80,28 +80,15 @@ export function ContactForm() {
       const waBase = siteConfig.links.whatsapp
       url = `${waBase}?text=${encodeURIComponent(messageRaw)}`
     } else {
-      url = `https://t.me/share?text=${encodeURIComponent(messageRaw)}`
+      const tgBase = siteConfig.links.telegram || 'https://t.me'
+      // Open chat with username if provided, same behavior as WhatsApp
+      url = `${tgBase}?text=${encodeURIComponent(messageRaw)}`
     }
 
     setTimeout(() => {
-      if (provider === 'telegram') {
-        // Try to open Telegram app via tg:// protocol, then fallback to web link
-        try {
-          const appUrl = `tg://msg?text=${encodeURIComponent(messageRaw)}`
-          const iframe = document.createElement('iframe')
-          iframe.style.display = 'none'
-          iframe.src = appUrl
-          document.body.appendChild(iframe)
-          // After short delay, fallback to web share (for desktop or if app didn't open)
-          setTimeout(() => {
-            window.location.href = url
-          }, 800)
-        } catch (e) {
-          window.location.href = url
-        }
-      } else {
+        // For both providers use direct navigation to the messenger share URL
+        // Direct navigation for both providers (same UX as WhatsApp)
         window.location.href = url
-      }
     }, 5000)
   }
 
