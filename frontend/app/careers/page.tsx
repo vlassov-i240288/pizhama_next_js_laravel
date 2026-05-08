@@ -18,7 +18,7 @@ const benefits = [
   { icon: Users, title: "Сильная команда", desc: "Работай с профессионалами, учись каждый день" },
   { icon: Clock, title: "Гибкий график", desc: "Удаленка или офис, главное — результат" },
   { icon: Heart, title: "Забота о команде", desc: "ДМС, оплата обучения, team building" },
-  { icon: Coffee, title: "Комфортный офис", desc: "Современный офис в центре Алматы" },
+  { icon: Coffee, title: "Комфортный офис", desc: "Современный офис в Актобе" },
   { icon: Briefcase, title: "Карьерный рост", desc: "Прозрачная система грейдов и повышений" },
 ]
 
@@ -26,14 +26,14 @@ const openPositions = [
   {
     title: "Senior Frontend Developer",
     type: "Полная занятость",
-    location: "Удаленно / Алматы",
+    location: "Удаленно / Актобе",
     salary: "от $3,500",
     requirements: ["React/Next.js", "TypeScript", "3+ года опыта"],
   },
   {
     title: "Senior Backend Developer",
     type: "Полная занятость",
-    location: "Удаленно / Алматы",
+    location: "Удаленно / Актобе",
     salary: "от $3,500",
     requirements: ["Node.js/Python", "PostgreSQL", "3+ года опыта"],
   },
@@ -47,14 +47,14 @@ const openPositions = [
   {
     title: "UI/UX Designer",
     type: "Полная занятость",
-    location: "Удаленно / Алматы",
+    location: "Удаленно / Актобе",
     salary: "от $2,500",
     requirements: ["Figma", "Web/Mobile", "2+ года опыта"],
   },
   {
     title: "Project Manager",
     type: "Полная занятость",
-    location: "Алматы",
+    location: "Актобе",
     salary: "от $2,000",
     requirements: ["Agile/Scrum", "Техническая грамотность", "2+ года опыта"],
   },

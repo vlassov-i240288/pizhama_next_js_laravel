@@ -6,14 +6,14 @@ export const siteConfig = {
   links: {
     telegram: "https://t.me/Vlassov_I",
     whatsapp: "https://wa.me/77019204449",
-    email: "hello@nexus.agency",
-    phone: "+7 (701) 920-4449",
+    email: "info@pizhama.kz",
+    phone: "+77019204449",
   },
   address: {
-    city: "Алматы",
+    city: "Актобе",
     country: "Казахстан",
-    street: "ул. Достык, 200",
-    zip: "050051",
+    street: "",
+    zip: "",
   },
   social: {
     linkedin: "https://linkedin.com/company/nexus-agency",
@@ -29,7 +29,7 @@ export const siteConfig = {
     "разработка маркетплейсов",
     "enterprise web development",
     "разработка ERP систем",
-    "веб-разработка Алматы",
+    "веб-разработка Актобе",
     "digital agency Kazakhstan",
   ],
 } as const

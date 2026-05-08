@@ -1,10 +1,16 @@
+"use client"
+
 import Link from "next/link"
+import { useState } from "react"
 import { ArrowUpRight, Mail, Phone, MapPin, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { siteConfig, navigation } from "@/lib/site-config"
 
 export function Footer() {
+  const [email, setEmail] = useState("")
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
   return (
     <footer className="border-t border-border bg-card/30">
       {/* Newsletter Section */}
@@ -19,17 +25,43 @@ export function Footer() {
                 Подпишитесь на рассылку — делимся опытом разработки и внедрения IT-решений
               </p>
             </div>
-            <form className="flex gap-3">
+            <form
+              className="flex gap-3"
+              onSubmit={(e) => {
+                e.preventDefault()
+                const emailValue = (e.currentTarget.elements as any)["newsletter-email"].value as string
+                const emailRe = /^\S+@\S+\.\S+$/
+                if (!emailValue || !emailRe.test(emailValue)) {
+                  setError("Введите корректный email")
+                  setSuccess("")
+                  return
+                }
+                setError("")
+                setSuccess("Спасибо! Вы подписаны.")
+                setEmail("")
+              }}
+            >
               <Input
+                name="newsletter-email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 placeholder="Ваш email"
                 className="flex-1 bg-background/50"
+                aria-invalid={!!error}
               />
-              <Button type="submit" className="gap-2">
+              <Button type="submit" className="gap-2 cursor-pointer">
                 <Send className="h-4 w-4" />
                 <span className="hidden sm:inline">Подписаться</span>
               </Button>
             </form>
+            <div className="mt-2">
+              {error ? (
+                <p className="text-sm text-destructive">{error}</p>
+              ) : success ? (
+                <p className="text-sm text-success">{success}</p>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>

@@ -30,14 +30,14 @@ const contactMethods = [
   {
     icon: MessageCircle,
     title: "Telegram",
-    value: "@nexus_agency",
+    value: "@Vlassov_I",
     href: siteConfig.links.telegram,
     description: "Быстрая связь",
   },
   {
     icon: Send,
     title: "WhatsApp",
-    value: "+7 700 123 45 67",
+    value: "+77019204449",
     href: siteConfig.links.whatsapp,
     description: "Для срочных вопросов",
   },
@@ -110,7 +110,7 @@ export default function ContactsPage() {
                   <div className="text-sm text-muted-foreground mb-1">Время работы</div>
                   <div className="font-semibold mb-1">Пн-Пт: 9:00 - 18:00</div>
                   <div className="text-sm text-muted-foreground">
-                    GMT+5 (Алматы)
+                    GMT+5 (Актобе)
                   </div>
                 </div>
               </div>
