@@ -32,7 +32,7 @@ export function Header() {
         <nav className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
-            <img src="/logo_pizhama.svg" alt={siteConfig.name} className="h-8 w-auto" />
+            <img src="/logo_pizhama.png" alt={siteConfig.name} className="h-8 w-auto" />
             <span className="sr-only">{siteConfig.name}</span>
           </Link>
 

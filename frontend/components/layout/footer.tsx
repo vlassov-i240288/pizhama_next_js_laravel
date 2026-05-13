@@ -72,7 +72,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 lg:col-span-2">
             <Link href="/" className="inline-block mb-4 flex items-center gap-3">
-              <img src="/logo_pizhama.svg" alt={siteConfig.name} className="h-8 w-auto" />
+              <img src="/logo_pizhama.png" alt={siteConfig.name} className="h-8 w-auto" />
               <span className="sr-only">{siteConfig.name}</span>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm">
