@@ -227,10 +227,10 @@ export function ContactForm() {
         </div>
       </div>
 
-      <div className="flex gap-3 mt-6">
+      <div className="flex flex-col sm:flex-row gap-3 mt-6">
         <Button
           type="button"
-          className="flex-1 gap-2 bg-green-600 hover:bg-green-700 text-white cursor-pointer"
+          className="w-full sm:flex-1 gap-2 bg-green-600 hover:bg-green-700 text-white cursor-pointer"
           disabled={isSubmitting}
           onClick={() => sendAndRedirect('whatsapp')}
           aria-label="Отправить в WhatsApp"
@@ -253,7 +253,7 @@ export function ContactForm() {
 
         <Button
           type="button"
-          className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+          className="w-full sm:flex-1 gap-2 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
           disabled={isSubmitting}
           onClick={() => sendAndRedirect('telegram')}
           aria-label="Отправить в Telegram"
