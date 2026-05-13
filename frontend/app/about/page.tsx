@@ -76,11 +76,6 @@ export default function AboutPage() {
                 <ArrowRight className="h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/careers">
-                Присоединиться к команде
-              </Link>
-            </Button>
           </div>
         </div>
 

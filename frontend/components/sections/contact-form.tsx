@@ -16,10 +16,10 @@ import {
 } from "@/components/ui/select"
 
 const budgetOptions = [
-  { value: "under-10k", label: "До $10,000" },
-  { value: "10k-30k", label: "$10,000 - $30,000" },
-  { value: "30k-100k", label: "$30,000 - $100,000" },
-  { value: "over-100k", label: "Более $100,000" },
+  { value: "80k", label: "до 80 000 тг" },
+  { value: "80k-200k", label: "от 80 000 до 200 000 тг" },
+  { value: "200k-500k", label: "от 200 000 до 500 000 тг" },
+  { value: "over-500k", label: "более 500 000 тг" },
 ]
 
 const serviceOptions = [

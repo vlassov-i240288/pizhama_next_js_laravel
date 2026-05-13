@@ -30,14 +30,14 @@ const contactMethods = [
   {
     icon: MessageCircle,
     title: "Telegram",
-    value: "@Vlassov_I",
+    value: "",
     href: siteConfig.links.telegram,
     description: "Быстрая связь",
   },
   {
     icon: Send,
     title: "WhatsApp",
-    value: "+77019204449",
+    value: "",
     href: siteConfig.links.whatsapp,
     description: "Для срочных вопросов",
   },
@@ -55,7 +55,7 @@ export default function ContactsPage() {
           </h1>
           <p className="text-lg text-muted-foreground">
             Выберите удобный способ связи или оставьте заявку — 
-            мы свяжемся с вами в течение 24 часов
+            мы свяжемся с вами в течение 2 минут
           </p>
         </div>
 
@@ -75,8 +75,18 @@ export default function ContactsPage() {
                   <method.icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground mb-1">{method.title}</div>
-                  <div className="font-semibold mb-1">{method.value}</div>
+                  <div
+                    className={
+                      method.title === "Telegram" || method.title === "WhatsApp"
+                        ? "text-base text-white mb-1 font-semibold"
+                        : "text-sm text-muted-foreground mb-1"
+                    }
+                  >
+                    {method.title}
+                  </div>
+                  {method.value ? (
+                    <div className="font-semibold mb-1">{method.value}</div>
+                  ) : null}
                   <div className="text-xs text-muted-foreground">{method.description}</div>
                 </div>
               </a>
@@ -126,13 +136,18 @@ export default function ContactsPage() {
         {/* Map Placeholder */}
         <div className="mt-20">
           <div className="glass rounded-2xl overflow-hidden">
-            <div className="aspect-[21/9] bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 text-primary/50 mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  {siteConfig.address.city}, {siteConfig.address.street}
-                </p>
-              </div>
+            <div className="aspect-[21/9]">
+              <iframe
+                src={
+                  `https://www.google.com/maps?q=${encodeURIComponent(
+                    siteConfig.address.city + (siteConfig.address.street ? ' ' + siteConfig.address.street : '')
+                  )}&output=embed`
+                }
+                className="w-full h-full border-0"
+                loading="lazy"
+                title="map"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </div>
         </div>

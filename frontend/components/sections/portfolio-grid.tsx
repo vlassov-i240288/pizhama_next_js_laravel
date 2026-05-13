@@ -34,73 +34,96 @@ export function PortfolioGrid() {
 
       {/* Grid */}
       <div className="grid md:grid-cols-2 gap-6">
-        {filteredCases.map((caseItem) => (
-          <Link
-            key={caseItem.id}
-            href={`/portfolio/${caseItem.id}`}
-            className="group glass rounded-2xl overflow-hidden hover:bg-card/60 transition-all duration-300"
-          >
-            {/* Image */}
-            <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-8xl font-bold text-foreground/5">
-                  {caseItem.title.charAt(0)}
-                </span>
-              </div>
-              <div className="absolute top-4 left-4">
-                <span className="px-3 py-1 text-xs font-medium bg-background/80 backdrop-blur rounded-full">
-                  {caseItem.category}
-                </span>
-              </div>
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="p-2 bg-background/80 backdrop-blur rounded-full">
-                  <ArrowUpRight className="h-4 w-4" />
+        {filteredCases.map((caseItem) => {
+          const isExternal = !!caseItem.url
+          const content = (
+            <>
+              {/* Image */}
+              <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-8xl font-bold text-foreground/5">
+                    {caseItem.title.charAt(0)}
+                  </span>
+                </div>
+                <div className="absolute top-4 left-4">
+                  <span className="px-3 py-1 text-xs font-medium bg-background/80 backdrop-blur rounded-full">
+                    {caseItem.category}
+                  </span>
+                </div>
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="p-2 bg-background/80 backdrop-blur rounded-full">
+                    <ArrowUpRight className="h-4 w-4" />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Content */}
-            <div className="p-6">
-              <div className="text-sm text-muted-foreground mb-2">
-                {caseItem.client}
-              </div>
-              
-              <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
-                {caseItem.title}
-              </h3>
-              
-              <p className="text-muted-foreground text-sm mb-6">
-                {caseItem.description}
-              </p>
+              {/* Content */}
+              <div className="p-6">
+                <div className="text-sm text-muted-foreground mb-2">
+                  {caseItem.client}
+                </div>
 
-              {/* Results */}
-              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
-                {caseItem.results.map((result) => (
-                  <div key={result.metric}>
-                    <div className="text-lg font-bold text-primary">
-                      {result.value}
+                <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                  {caseItem.title}
+                </h3>
+
+                <p className="text-muted-foreground text-sm mb-6">
+                  {caseItem.description}
+                </p>
+
+                {/* Results */}
+                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+                  {caseItem.results.map((result) => (
+                    <div key={result.metric}>
+                      <div className="text-lg font-bold text-primary">
+                        {result.value}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {result.metric}
+                      </div>
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {result.metric}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
 
-              {/* Technologies */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                {caseItem.technologies.slice(0, 4).map((tech) => (
-                  <span
-                    key={tech}
-                    className="text-xs px-2 py-1 rounded bg-secondary"
-                  >
-                    {tech}
-                  </span>
-                ))}
+                {/* Technologies */}
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {caseItem.technologies.slice(0, 4).map((tech) => (
+                    <span
+                      key={tech}
+                      className="text-xs px-2 py-1 rounded bg-secondary"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+          </>
+          )
+
+          if (isExternal) {
+            return (
+              <a
+                key={caseItem.id}
+                href={caseItem.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group glass rounded-2xl overflow-hidden hover:bg-card/60 transition-all duration-300"
+              >
+                {content}
+              </a>
+            )
+          }
+
+          return (
+            <Link
+              key={caseItem.id}
+              href={`/portfolio/${caseItem.id}`}
+              className="group glass rounded-2xl overflow-hidden hover:bg-card/60 transition-all duration-300"
+            >
+              {content}
+            </Link>
+          )
+          })}
       </div>
 
       {filteredCases.length === 0 && (

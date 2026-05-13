@@ -46,20 +46,21 @@ export function CasesSection() {
           </motion.div>
         </div>
 
-        {/* Cases Grid */}
+        {/* Cases Grid (show only two items; cards link to /portfolio) */}
         <div className="grid lg:grid-cols-2 gap-6">
-          {caseStudies.map((caseItem, index) => (
-            <motion.div
-              key={caseItem.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Link
-                href={`/portfolio/${caseItem.id}`}
-                className="group block glass hover:bg-card/60 rounded-2xl overflow-hidden transition-all duration-300"
+          {caseStudies.slice(0, 2).map((caseItem, index) => {
+            return (
+              <motion.div
+                key={caseItem.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
               >
+                <Link
+                  href="/portfolio"
+                  className="group block glass hover:bg-card/60 rounded-2xl overflow-hidden transition-all duration-300"
+                >
                 {/* Image Placeholder */}
                 <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden">
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -107,9 +108,10 @@ export function CasesSection() {
                     ))}
                   </div>
                 </div>
-              </Link>
-            </motion.div>
-          ))}
+                  </Link>
+                </motion.div>
+              )
+            })}
         </div>
       </div>
     </section>

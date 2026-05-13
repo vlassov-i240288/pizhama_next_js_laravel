@@ -31,10 +31,9 @@ export function Header() {
       <div className="container mx-auto px-4 lg:px-8">
         <nav className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold tracking-tight">
-              <span className="gradient-text">{siteConfig.name}</span>
-            </span>
+          <Link href="/" className="flex items-center gap-3">
+            <img src="/logo_pizhama.svg" alt={siteConfig.name} className="h-8 w-auto" />
+            <span className="sr-only">{siteConfig.name}</span>
           </Link>
 
           {/* Desktop Navigation */}

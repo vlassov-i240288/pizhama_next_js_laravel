@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Clock, User, Tag, Share2, Linkedin, Twitter } from "lucide-react"
+import { ArrowLeft, Clock, User, Tag, Share2, Twitter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { siteConfig } from "@/lib/site-config"
 
@@ -163,11 +163,7 @@ export default async function BlogPostPage({ params }: Props) {
               {/* Share */}
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground mr-2">Поделиться:</span>
-                <Button variant="outline" size="icon" asChild>
-                  <a href="#" aria-label="Share on LinkedIn">
-                    <Linkedin className="h-4 w-4" />
-                  </a>
-                </Button>
+                {/* LinkedIn share removed */}
                 <Button variant="outline" size="icon" asChild>
                   <a href="#" aria-label="Share on Twitter">
                     <Twitter className="h-4 w-4" />

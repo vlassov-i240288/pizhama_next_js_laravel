@@ -23,12 +23,6 @@ const iconMap = {
 
 const additionalServices = [
   {
-    icon: Cpu,
-    title: "Автоматизация бизнес-процессов",
-    description: "Оптимизация и автоматизация рабочих процессов с помощью современных технологий",
-    href: "/services/automation",
-  },
-  {
     icon: Workflow,
     title: "Интеграции и API",
     description: "Интеграция систем, разработка API и микросервисной архитектуры",

@@ -71,8 +71,9 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-2">
-            <Link href="/" className="inline-block mb-4">
-              <span className="text-2xl font-bold gradient-text">{siteConfig.name}</span>
+            <Link href="/" className="inline-block mb-4 flex items-center gap-3">
+              <img src="/logo_pizhama.svg" alt={siteConfig.name} className="h-8 w-auto" />
+              <span className="sr-only">{siteConfig.name}</span>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm">
               {siteConfig.description}
@@ -94,7 +95,10 @@ export function Footer() {
               </a>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <MapPin className="h-4 w-4 flex-shrink-0" />
-                <span>{siteConfig.address.city}, {siteConfig.address.street}</span>
+                <span>
+                  {siteConfig.address.country}, {siteConfig.address.city}
+                  {siteConfig.address.street ? `, ${siteConfig.address.street}` : ""}
+                </span>
               </div>
             </div>
           </div>
@@ -153,15 +157,6 @@ export function Footer() {
                 className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 WhatsApp
-                <ArrowUpRight className="h-3 w-3" />
-              </a>
-              <a
-                href={siteConfig.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-              >
-                LinkedIn
                 <ArrowUpRight className="h-3 w-3" />
               </a>
             </div>
