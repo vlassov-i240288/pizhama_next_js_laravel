@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "PIZHAMA",
   description: "Экспертное digital-агентство по разработке сайтов, CRM/ERP систем и внедрению AI решений для бизнеса",
-  url: "https://nexus.agency",
-  ogImage: "https://nexus.agency/og.jpg",
+  url: "https://pizhama.kz",
+  ogImage: "https://pizhama.kz/og.jpg",
   links: {
     telegram: "https://t.me/Vlassov_I",
     whatsapp: "https://wa.me/77019204449",
@@ -16,8 +16,8 @@ export const siteConfig = {
     zip: "",
   },
   social: {
-    instagram: "https://instagram.com/nexus.agency",
-    facebook: "https://facebook.com/nexus.agency",
+    instagram: "https://instagram.com/pizhama.kz",
+    facebook: "https://facebook.com/pizhama.kz",
   },
   keywords: [
     "разработка сайтов Казахстан",
