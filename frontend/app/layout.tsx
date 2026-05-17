@@ -1,23 +1,24 @@
-import type { Metadata, Viewport } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
-import { Header } from "@/components/layout/header"
-import { Footer } from "@/components/layout/footer"
-import { StickyCTA } from "@/components/layout/sticky-cta"
-import { siteConfig } from "@/lib/site-config"
-import "./globals.css"
+import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { StickyCTA } from "@/components/layout/sticky-cta";
+import { siteConfig } from "@/lib/site-config";
+import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
   variable: "--font-sans",
   display: "swap",
-})
+});
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
-})
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -71,23 +72,40 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteConfig.url,
   },
-}
+};
 
 export const viewport: Viewport = {
   themeColor: "#0f0f14",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={`${inter.variable} ${jetbrainsMono.variable} bg-background`}>
+    <html
+      lang="ru"
+      className={`${inter.variable} ${jetbrainsMono.variable} bg-background`}
+    >
       <head>
+        {process.env.NODE_ENV === "production" && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID ?? "G-WT3X2H11V0"}`}
+              strategy="afterInteractive"
+            />
+            <Script id="gtag-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${process.env.NEXT_PUBLIC_GA_ID ?? "G-WT3X2H11V0"}');`}
+            </Script>
+          </>
+        )}
         <link rel="icon" href="/ico_pizhama.png" type="image/png" sizes="any" />
         <link rel="apple-touch-icon" href="/ico_pizhama.png" />
       </head>
@@ -99,5 +117,5 @@ export default function RootLayout({
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>
-  )
+  );
 }
