@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Check, Globe, Database, Brain, MessageSquare } f
 import { Button } from "@/components/ui/button"
 import { services, caseStudies, siteConfig } from "@/lib/site-config"
 import { ContactForm } from "@/components/sections/contact-form"
+import { JsonLd, breadcrumbList } from "@/components/json-ld"
 
 const iconMap = {
   Globe,
@@ -44,6 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${service.title} | ${siteConfig.name}`,
       description: service.description,
       url: `${siteConfig.url}/services/${slug}`,
+      images: ["/opengraph-image"],
     },
   }
 }
@@ -63,6 +65,25 @@ export default async function ServicePage({ params }: Props) {
 
   return (
     <div className="pt-32 pb-24">
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: service.title,
+            description: service.description,
+            serviceType: service.title,
+            url: `${siteConfig.url}/services/${service.id}`,
+            provider: { "@id": `${siteConfig.url}/#organization` },
+            areaServed: "KZ",
+          },
+          breadcrumbList([
+            { name: "Главная", path: "/" },
+            { name: "Услуги", path: "/services" },
+            { name: service.title, path: `/services/${service.id}` },
+          ]),
+        ]}
+      />
       <div className="container mx-auto px-4 lg:px-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">

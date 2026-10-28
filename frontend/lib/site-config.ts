@@ -2,7 +2,6 @@ export const siteConfig = {
   name: "PIZHAMA",
   description: "Экспертное digital-агентство по разработке сайтов, CRM/ERP систем и внедрению AI решений для бизнеса",
   url: "https://pizhama.kz",
-  ogImage: "https://pizhama.kz/og.jpg",
   links: {
     telegram: "https://t.me/Vlassov_I",
     whatsapp: "https://wa.me/77019204449",

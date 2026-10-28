@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, ExternalLink, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { JsonLd, breadcrumbList } from "@/components/json-ld"
 import { caseStudies, siteConfig } from "@/lib/site-config"
 
 type Props = {
@@ -36,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${caseItem.title} | ${siteConfig.name}`,
       description: caseItem.description,
       url: `${siteConfig.url}/portfolio/${slug}`,
+      images: ["/opengraph-image"],
     },
   }
 }
@@ -54,6 +56,13 @@ export default async function CasePage({ params }: Props) {
 
   return (
     <div className="pt-32 pb-24">
+      <JsonLd
+        data={breadcrumbList([
+          { name: "Главная", path: "/" },
+          { name: "Портфолио", path: "/portfolio" },
+          { name: caseItem.title, path: `/portfolio/${caseItem.id}` },
+        ])}
+      />
       <div className="container mx-auto px-4 lg:px-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">

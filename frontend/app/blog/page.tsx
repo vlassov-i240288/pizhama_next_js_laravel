@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Clock, Tag, User } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ArrowRight, Clock, User } from "lucide-react"
 import { siteConfig } from "@/lib/site-config"
 import { CTASection } from "@/components/sections/cta"
+import { blogPosts } from "@/lib/blog-posts"
 
 export const metadata: Metadata = {
   title: "Блог — Статьи о разработке и технологиях",
@@ -13,71 +13,6 @@ export const metadata: Metadata = {
     canonical: `${siteConfig.url}/blog`,
   },
 }
-
-const blogPosts = [
-  {
-    id: "ai-chatbot-business-2024",
-    title: "AI чат-боты для бизнеса: полное руководство на 2024 год",
-    excerpt: "Разбираем, как внедрить AI чат-бота в бизнес, какие задачи он решает и как измерить ROI от внедрения.",
-    category: "AI",
-    author: "Алексей Иванов",
-    date: "15 марта 2024",
-    readTime: "12 мин",
-    featured: true,
-  },
-  {
-    id: "nextjs-15-features",
-    title: "Next.js 15: новые возможности для enterprise разработки",
-    excerpt: "Обзор ключевых обновлений Next.js 15 и как они помогают создавать более быстрые и масштабируемые приложения.",
-    category: "Разработка",
-    author: "Дмитрий Петров",
-    date: "10 марта 2024",
-    readTime: "8 мин",
-    featured: false,
-  },
-  {
-    id: "crm-implementation-guide",
-    title: "Внедрение CRM: как избежать типичных ошибок",
-    excerpt: "Практическое руководство по внедрению CRM системы. Разбираем кейсы успешных и неудачных внедрений.",
-    category: "CRM",
-    author: "Мария Соколова",
-    date: "5 марта 2024",
-    readTime: "15 мин",
-    featured: false,
-  },
-  {
-    id: "ai-automation-sales",
-    title: "Автоматизация продаж с помощью AI: практический опыт",
-    excerpt: "Как мы внедрили AI в воронку продаж и увеличили конверсию на 45%. Пошаговый разбор проекта.",
-    category: "AI",
-    author: "Алексей Иванов",
-    date: "28 февраля 2024",
-    readTime: "10 мин",
-    featured: false,
-  },
-  {
-    id: "marketplace-development",
-    title: "Разработка маркетплейса: архитектура и технологии",
-    excerpt: "Технический разбор архитектуры современного маркетплейса. От выбора стека до масштабирования.",
-    category: "Разработка",
-    author: "Дмитрий Петров",
-    date: "20 февраля 2024",
-    readTime: "18 мин",
-    featured: false,
-  },
-  {
-    id: "seo-nextjs",
-    title: "SEO для Next.js приложений: полное руководство",
-    excerpt: "Как настроить SEO в Next.js для максимальной видимости в поисковых системах. Технические и контентные аспекты.",
-    category: "SEO",
-    author: "Елена Козлова",
-    date: "15 февраля 2024",
-    readTime: "14 мин",
-    featured: false,
-  },
-]
-
-const categories = ["Все", "AI", "Разработка", "CRM", "SEO"]
 
 export default function BlogPage() {
   const featuredPost = blogPosts.find((p) => p.featured)
@@ -96,19 +31,6 @@ export default function BlogPage() {
             Делимся опытом из реальных проектов, разбираем технологии 
             и тренды в разработке
           </p>
-        </div>
-
-        {/* Categories */}
-        <div className="flex flex-wrap gap-3 mb-12">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={category === "Все" ? "default" : "outline"}
-              size="sm"
-            >
-              {category}
-            </Button>
-          ))}
         </div>
 
         {/* Featured Post */}
@@ -152,6 +74,7 @@ export default function BlogPage() {
         )}
 
         {/* Posts Grid */}
+        {regularPosts.length > 0 && (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {regularPosts.map((post) => (
             <Link
@@ -190,13 +113,7 @@ export default function BlogPage() {
             </Link>
           ))}
         </div>
-
-        {/* Load More */}
-        <div className="text-center mt-12">
-          <Button variant="outline" size="lg">
-            Загрузить еще
-          </Button>
-        </div>
+        )}
       </div>
 
       <CTASection />

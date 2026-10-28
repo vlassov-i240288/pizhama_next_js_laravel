@@ -5,8 +5,11 @@ import Script from "next/script";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { StickyCTA } from "@/components/layout/sticky-cta";
+import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/components/json-ld";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
+
+const yandexMetrikaId = process.env.NEXT_PUBLIC_YANDEX_METRIKA_ID;
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -43,20 +46,15 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: `${siteConfig.name} — Digital-агентство | Разработка сайтов, CRM, AI решения`,
     description: siteConfig.description,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteConfig.name} — Digital-агентство`,
     description: siteConfig.description,
-    images: [siteConfig.ogImage],
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
   },
   robots: {
     index: true,
@@ -104,12 +102,34 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '${process.env.NEXT_PUBLIC_GA_ID ?? "G-WT3X2H11V0"}');`}
             </Script>
+            {yandexMetrikaId && (
+              <Script id="yandex-metrika" strategy="afterInteractive">
+                {`(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();
+for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+ym(${yandexMetrikaId}, "init", { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });`}
+              </Script>
+            )}
           </>
         )}
         <link rel="icon" href="/ico_pizhama.png" type="image/png" sizes="any" />
         <link rel="apple-touch-icon" href="/ico_pizhama.png" />
       </head>
       <body className="font-sans antialiased min-h-screen flex flex-col">
+        <JsonLd data={[organizationJsonLd, websiteJsonLd]} />
+        {process.env.NODE_ENV === "production" && yandexMetrikaId && (
+          <noscript>
+            <div>
+              <img
+                src={`https://mc.yandex.ru/watch/${yandexMetrikaId}`}
+                style={{ position: "absolute", left: "-9999px" }}
+                alt=""
+              />
+            </div>
+          </noscript>
+        )}
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

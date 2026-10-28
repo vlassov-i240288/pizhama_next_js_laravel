@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
+import { JsonLd } from "@/components/json-ld"
 import { ArrowRight, MessageCircle } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -61,9 +62,20 @@ const additionalFaq = [
   },
 ]
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [...faqItems, ...additionalFaq.flatMap((category) => category.questions)].map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+}
+
 export default function FAQPage() {
   return (
     <div className="pt-32 pb-24">
+      <JsonLd data={faqJsonLd} />
       <div className="container mx-auto px-4 lg:px-8">
         {/* Header */}
         <div className="max-w-3xl mb-16">

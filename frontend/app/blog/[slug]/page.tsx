@@ -1,67 +1,15 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, Clock, User, Tag, Share2, Twitter } from "lucide-react"
+import { ArrowLeft, Clock, Tag, Twitter } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { JsonLd, breadcrumbList } from "@/components/json-ld"
 import { siteConfig } from "@/lib/site-config"
+import { blogPosts } from "@/lib/blog-posts"
 
 type Props = {
   params: Promise<{ slug: string }>
 }
-
-const blogPosts = [
-  {
-    id: "ai-chatbot-business-2024",
-    title: "AI чат-боты для бизнеса: полное руководство на 2024 год",
-    excerpt: "Разбираем, как внедрить AI чат-бота в бизнес, какие задачи он решает и как измерить ROI от внедрения.",
-    category: "AI",
-    author: "Алексей Иванов",
-    authorRole: "AI Lead",
-    date: "15 марта 2024",
-    readTime: "12 мин",
-    content: `
-## Введение
-
-AI чат-боты стали неотъемлемой частью современного бизнеса. В 2024 году технологии достигли уровня, когда чат-бот может полноценно заменить первую линию поддержки и значительно повысить конверсию в продажах.
-
-## Какие задачи решают AI чат-боты
-
-### 1. Клиентская поддержка
-- Ответы на типовые вопросы 24/7
-- Маршрутизация сложных запросов к операторам
-- Сбор обратной связи
-
-### 2. Продажи и лидогенерация
-- Квалификация лидов
-- Персонализированные рекомендации
-- Сопровождение по воронке продаж
-
-### 3. Внутренние процессы
-- HR-бот для сотрудников
-- IT-поддержка
-- Онбординг новых сотрудников
-
-## Технологии
-
-Современные чат-боты строятся на базе LLM (Large Language Models):
-- GPT-4 от OpenAI
-- Claude от Anthropic
-- Open-source модели (LLaMA, Mistral)
-
-## Как измерить ROI
-
-Ключевые метрики для оценки эффективности:
-1. **Процент автоматизации** — доля обращений, обработанных без участия человека
-2. **NPS** — удовлетворенность клиентов
-3. **Среднее время ответа** — скорость реакции на запросы
-4. **Конверсия** — влияние на продажи
-
-## Выводы
-
-AI чат-боты — это не просто тренд, а необходимый инструмент для конкурентоспособности в 2024 году. При правильном внедрении ROI может достигать 300% в первый год.
-    `,
-  },
-]
 
 export async function generateStaticParams() {
   return blogPosts.map((post) => ({
@@ -82,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.title,
     description: post.excerpt,
-    keywords: [post.category, "статья", "блог"],
+    keywords: post.tags,
     alternates: {
       canonical: `${siteConfig.url}/blog/${slug}`,
     },
@@ -91,7 +39,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.excerpt,
       url: `${siteConfig.url}/blog/${slug}`,
-      publishedTime: post.date,
+      images: ["/opengraph-image"],
+      publishedTime: post.publishedAt,
       authors: [post.author],
     },
   }
@@ -105,8 +54,31 @@ export default async function BlogPostPage({ params }: Props) {
     notFound()
   }
 
+  const postUrl = `${siteConfig.url}/blog/${post.id}`
+
   return (
     <div className="pt-32 pb-24">
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            headline: post.title,
+            description: post.excerpt,
+            datePublished: post.publishedAt,
+            inLanguage: "ru-RU",
+            mainEntityOfPage: postUrl,
+            author: { "@type": "Person", name: post.author },
+            publisher: { "@id": `${siteConfig.url}/#organization` },
+            keywords: post.tags.join(", "),
+          },
+          breadcrumbList([
+            { name: "Главная", path: "/" },
+            { name: "Блог", path: "/blog" },
+            { name: post.title, path: `/blog/${post.id}` },
+          ]),
+        ]}
+      />
       <div className="container mx-auto px-4 lg:px-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
@@ -137,7 +109,7 @@ export default async function BlogPostPage({ params }: Props) {
                 <Clock className="h-4 w-4" />
                 {post.readTime}
               </span>
-              <span>{post.date}</span>
+              <time dateTime={post.publishedAt}>{post.date}</time>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-balance">
@@ -165,7 +137,12 @@ export default async function BlogPostPage({ params }: Props) {
                 <span className="text-sm text-muted-foreground mr-2">Поделиться:</span>
                 {/* LinkedIn share removed */}
                 <Button variant="outline" size="icon" asChild>
-                  <a href="#" aria-label="Share on Twitter">
+                  <a
+                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(post.title)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Поделиться в Twitter"
+                  >
                     <Twitter className="h-4 w-4" />
                   </a>
                 </Button>
@@ -228,7 +205,7 @@ export default async function BlogPostPage({ params }: Props) {
           <div className="flex items-center gap-3 mt-12 pt-8 border-t border-border">
             <Tag className="h-4 w-4 text-muted-foreground" />
             <div className="flex flex-wrap gap-2">
-              {["AI", "чат-боты", "автоматизация", "бизнес"].map((tag) => (
+              {post.tags.map((tag) => (
                 <span
                   key={tag}
                   className="text-sm px-3 py-1 rounded-full bg-secondary"
