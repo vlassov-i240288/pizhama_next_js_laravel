@@ -6,7 +6,7 @@ import { ArrowUpRight, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { caseStudies } from "@/lib/site-config"
 
-const categories = ["Все", "Маркетплейс", "CRM/ERP", "AI решения", "SaaS"]
+const categories = ["Все", ...Array.from(new Set(caseStudies.map((c) => c.category)))]
 
 export function PortfolioGrid() {
   const [activeCategory, setActiveCategory] = useState("Все")
@@ -35,19 +35,37 @@ export function PortfolioGrid() {
       {/* Grid */}
       <div className="grid md:grid-cols-2 gap-6">
         {filteredCases.map((caseItem) => {
-          const isExternal = !!caseItem.url
-          const content = (
-            <>
+          const hasScreenshot = caseItem.image.endsWith(".webp")
+          const badge = "niche" in caseItem ? caseItem.niche : caseItem.category
+
+          return (
+            <Link
+              key={caseItem.id}
+              href={`/portfolio/${caseItem.id}`}
+              className="group glass rounded-2xl overflow-hidden hover:bg-card/60 transition-all duration-300"
+            >
               {/* Image */}
               <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-8xl font-bold text-foreground/5">
-                    {caseItem.title.charAt(0)}
-                  </span>
-                </div>
+                {hasScreenshot ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={caseItem.image}
+                    alt={`Сайт ${caseItem.title} — ${caseItem.description}`}
+                    loading="lazy"
+                    width={1200}
+                    height={750}
+                    className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-8xl font-bold text-foreground/5">
+                      {caseItem.title.charAt(0)}
+                    </span>
+                  </div>
+                )}
                 <div className="absolute top-4 left-4">
                   <span className="px-3 py-1 text-xs font-medium bg-background/80 backdrop-blur rounded-full">
-                    {caseItem.category}
+                    {badge}
                   </span>
                 </div>
                 <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -72,18 +90,20 @@ export function PortfolioGrid() {
                 </p>
 
                 {/* Results */}
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
-                  {caseItem.results.map((result) => (
-                    <div key={result.metric}>
-                      <div className="text-lg font-bold text-primary">
-                        {result.value}
+                {caseItem.results.length > 0 && (
+                  <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
+                    {caseItem.results.map((result) => (
+                      <div key={result.metric}>
+                        <div className="text-lg font-bold text-primary">
+                          {result.value}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {result.metric}
+                        </div>
                       </div>
-                      <div className="text-xs text-muted-foreground">
-                        {result.metric}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
 
                 {/* Technologies */}
                 <div className="flex flex-wrap gap-2 mt-4">
@@ -97,33 +117,9 @@ export function PortfolioGrid() {
                   ))}
                 </div>
               </div>
-          </>
-          )
-
-          if (isExternal) {
-            return (
-              <a
-                key={caseItem.id}
-                href={caseItem.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group glass rounded-2xl overflow-hidden hover:bg-card/60 transition-all duration-300"
-              >
-                {content}
-              </a>
-            )
-          }
-
-          return (
-            <Link
-              key={caseItem.id}
-              href={`/portfolio/${caseItem.id}`}
-              className="group glass rounded-2xl overflow-hidden hover:bg-card/60 transition-all duration-300"
-            >
-              {content}
             </Link>
           )
-          })}
+        })}
       </div>
 
       {filteredCases.length === 0 && (

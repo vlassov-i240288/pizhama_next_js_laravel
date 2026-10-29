@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${caseItem.title} | ${siteConfig.name}`,
       description: caseItem.description,
       url: `${siteConfig.url}/portfolio/${slug}`,
-      images: ["/opengraph-image"],
+      images: [`/og?title=${encodeURIComponent(caseItem.title)}&label=${encodeURIComponent("Кейс · " + caseItem.category)}`],
     },
   }
 }
@@ -49,6 +49,10 @@ export default async function CasePage({ params }: Props) {
   if (!caseItem) {
     notFound()
   }
+
+  // Real projects carry their own task/solution/features; older entries fall back to generic copy
+  const details = "task" in caseItem ? caseItem : null
+  const hasScreenshot = caseItem.image.endsWith(".webp")
 
   const currentIndex = caseStudies.findIndex((c) => c.id === slug)
   const nextCase = caseStudies[(currentIndex + 1) % caseStudies.length]
@@ -86,7 +90,7 @@ export default async function CasePage({ params }: Props) {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 mb-16">
           <div>
             <span className="text-primary font-medium mb-4 block">
-              {caseItem.category}
+              {details ? details.niche : caseItem.category}
             </span>
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">
               {caseItem.title}
@@ -105,20 +109,40 @@ export default async function CasePage({ params }: Props) {
                   <ArrowRight className="h-5 w-5" />
                 </Link>
               </Button>
+              {"url" in caseItem && caseItem.url && (
+                <Button size="lg" variant="outline" className="gap-2" asChild>
+                  <a href={caseItem.url} target="_blank" rel="noopener">
+                    Открыть сайт
+                    <ExternalLink className="h-5 w-5" />
+                  </a>
+                </Button>
+              )}
             </div>
           </div>
 
           {/* Hero Image */}
           <div className="glass rounded-2xl overflow-hidden">
-            <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-              <span className="text-9xl font-bold text-foreground/5">
-                {caseItem.title.charAt(0)}
-              </span>
-            </div>
+            {hasScreenshot ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={caseItem.image}
+                alt={`Главный экран сайта ${caseItem.title}`}
+                width={1200}
+                height={750}
+                className="w-full h-auto"
+              />
+            ) : (
+              <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                <span className="text-9xl font-bold text-foreground/5">
+                  {caseItem.title.charAt(0)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Results */}
+        {caseItem.results.length > 0 && (
         <div className="glass-strong rounded-2xl p-8 lg:p-12 mb-16">
           <h2 className="text-2xl font-bold mb-8 text-center">Результаты проекта</h2>
           <div className="grid sm:grid-cols-3 gap-8">
@@ -133,6 +157,7 @@ export default async function CasePage({ params }: Props) {
             ))}
           </div>
         </div>
+        )}
 
         {/* Details Grid */}
         <div className="grid lg:grid-cols-3 gap-8 mb-16">
@@ -140,9 +165,9 @@ export default async function CasePage({ params }: Props) {
           <div className="glass rounded-2xl p-6">
             <h3 className="font-semibold mb-4">Задача</h3>
             <p className="text-sm text-muted-foreground">
-              Клиент обратился с задачей создания масштабируемого решения, 
-              которое позволит автоматизировать ключевые бизнес-процессы 
-              и повысить эффективность работы команды.
+              {details
+                ? details.task
+                : "Клиент обратился с задачей создания масштабируемого решения, которое позволит автоматизировать ключевые бизнес-процессы и повысить эффективность работы команды."}
             </p>
           </div>
 
@@ -150,9 +175,9 @@ export default async function CasePage({ params }: Props) {
           <div className="glass rounded-2xl p-6">
             <h3 className="font-semibold mb-4">Решение</h3>
             <p className="text-sm text-muted-foreground">
-              Мы разработали комплексное решение с использованием современного 
-              технологического стека, обеспечивающее высокую производительность 
-              и удобство использования.
+              {details
+                ? details.solution
+                : "Мы разработали комплексное решение с использованием современного технологического стека, обеспечивающее высокую производительность и удобство использования."}
             </p>
           </div>
 
@@ -174,16 +199,19 @@ export default async function CasePage({ params }: Props) {
 
         {/* Features */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold mb-8">Ключевые особенности</h2>
+          <h2 className="text-2xl font-bold mb-8">{details ? "Что сделали" : "Ключевые особенности"}</h2>
           <div className="grid sm:grid-cols-2 gap-4">
-            {[
-              "Адаптивный дизайн для всех устройств",
-              "Высокая производительность и SEO-оптимизация",
-              "Интеграция с внешними сервисами",
-              "Система аналитики и отчетности",
-              "Масштабируемая архитектура",
-              "Безопасность на уровне enterprise",
-            ].map((feature) => (
+            {(details
+              ? details.features
+              : [
+                  "Адаптивный дизайн для всех устройств",
+                  "Высокая производительность и SEO-оптимизация",
+                  "Интеграция с внешними сервисами",
+                  "Система аналитики и отчетности",
+                  "Масштабируемая архитектура",
+                  "Безопасность на уровне enterprise",
+                ]
+            ).map((feature) => (
               <div key={feature} className="flex items-center gap-3 glass rounded-lg p-4">
                 <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
                   <Check className="h-3.5 w-3.5 text-primary" />
@@ -193,6 +221,22 @@ export default async function CasePage({ params }: Props) {
             ))}
           </div>
         </div>
+
+        {/* Related service */}
+        {details && (
+          <div className="glass-strong rounded-2xl p-8 mb-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div>
+              <h2 className="text-xl font-bold mb-2">Нужен похожий сайт?</h2>
+              <p className="text-muted-foreground">Посмотрите, что мы предлагаем для вашей ниши, или сразу оставьте заявку.</p>
+            </div>
+            <Button size="lg" className="gap-2 flex-shrink-0" asChild>
+              <Link href={details.related}>
+                Подробнее об услуге
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
+        )}
 
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row justify-between gap-4 pt-8 border-t border-border">

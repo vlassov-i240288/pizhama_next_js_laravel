@@ -4,6 +4,7 @@ import { ArrowRight, Globe, Database, Brain, MessageSquare, Cpu, Workflow } from
 import { Button } from "@/components/ui/button"
 import { services, siteConfig } from "@/lib/site-config"
 import { CTASection } from "@/components/sections/cta"
+import { landingGroups } from "@/lib/landings"
 
 export const metadata: Metadata = {
   title: "Услуги",
@@ -20,15 +21,6 @@ const iconMap = {
   Brain,
   MessageSquare,
 }
-
-const additionalServices = [
-  {
-    icon: Workflow,
-    title: "Интеграции и API",
-    description: "Интеграция систем, разработка API и микросервисной архитектуры",
-    href: "/services/integrations",
-  },
-]
 
 export default function ServicesPage() {
   return (
@@ -100,27 +92,32 @@ export default function ServicesPage() {
           })}
         </div>
 
-        {/* Additional Services */}
-        <div className="grid md:grid-cols-2 gap-6 mb-16">
-          {additionalServices.map((service) => (
-            <Link
-              key={service.title}
-              href={service.href}
-              className="group flex items-start gap-4 glass rounded-xl p-6 hover:bg-card/60 transition-colors"
-            >
-              <div className="p-3 rounded-xl bg-primary/10 text-primary flex-shrink-0">
-                <service.icon className="h-5 w-5" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold mb-1 group-hover:text-primary transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">{service.description}</p>
-              </div>
-              <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" />
-            </Link>
-          ))}
-        </div>
+        {/* Niche solutions by service */}
+        {landingGroups.map((group) => (
+          <section key={group.serviceId} className="mb-16">
+            <h2 className="text-2xl font-bold mb-6">{group.sectionTitle}</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {group.landings.map((landing) => (
+                <Link
+                  key={landing.id}
+                  href={`/services/${group.serviceId}/${landing.id}`}
+                  className="group flex items-start gap-4 glass rounded-xl p-5 hover:bg-card/60 transition-colors"
+                >
+                  <div className="p-2.5 rounded-xl bg-primary/10 text-primary flex-shrink-0">
+                    <Workflow className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold mb-1 group-hover:text-primary transition-colors">
+                      {landing.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">{landing.audience.slice(0, 3).join(", ")}</p>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" />
+                </Link>
+              ))}
+            </div>
+          </section>
+        ))}
 
         {/* Process Section */}
         <div className="glass-strong rounded-2xl p-8 lg:p-12">

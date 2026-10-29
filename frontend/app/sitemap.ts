@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next"
 import { siteConfig, services, caseStudies } from "@/lib/site-config"
 import { blogPosts } from "@/lib/blog-posts"
+import { landingGroups } from "@/lib/landings"
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url
@@ -14,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.8 },
     { url: `${baseUrl}/contacts`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
     { url: `${baseUrl}/faq`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.6 },
+    { url: `${baseUrl}/calculator`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
     { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.3 },
     { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.3 },
   ]
@@ -34,6 +36,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }))
 
+  // Niche landings under services
+  const landingPages = landingGroups.flatMap((group) => group.landings.map((landing) => ({
+    url: `${baseUrl}/services/${group.serviceId}/${landing.id}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  })))
+
   // Blog posts
   const blogPages = blogPosts.map((post) => ({
     url: `${baseUrl}/blog/${post.id}`,
@@ -42,5 +52,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
-  return [...staticPages, ...servicePages, ...portfolioPages, ...blogPages]
+  return [...staticPages, ...servicePages, ...landingPages, ...portfolioPages, ...blogPages]
 }

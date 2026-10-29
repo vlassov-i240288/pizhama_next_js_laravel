@@ -9,14 +9,22 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Link from "next/link"
 
+// Base prices in tenge and base duration in weeks for an average project.
+// TODO(owner): align with the real price list before publishing.
 const projectTypes = [
-  { id: "landing", name: "Лендинг", basePrice: 3000 },
-  { id: "corporate", name: "Корпоративный сайт", basePrice: 8000 },
-  { id: "ecommerce", name: "Интернет-магазин", basePrice: 15000 },
-  { id: "marketplace", name: "Маркетплейс", basePrice: 50000 },
-  { id: "crm", name: "CRM / ERP система", basePrice: 30000 },
-  { id: "ai", name: "AI решение", basePrice: 20000 },
+  { id: "landing", name: "Лендинг", basePrice: 70000, baseWeeks: 0.5 },
+  { id: "corporate", name: "Корпоративный сайт", basePrice: 250000, baseWeeks: 4 },
+  { id: "ecommerce", name: "Интернет-магазин", basePrice: 500000, baseWeeks: 8 },
+  { id: "chatbot", name: "Чат-бот", basePrice: 150000, baseWeeks: 2 },
+  { id: "crm", name: "CRM / ERP система", basePrice: 1200000, baseWeeks: 12 },
+  { id: "ai", name: "AI решение", basePrice: 600000, baseWeeks: 6 },
+  { id: "marketplace", name: "Маркетплейс", basePrice: 2500000, baseWeeks: 16 },
 ]
+
+function formatDuration(weeks: number) {
+  if (weeks < 1) return `от ${Math.max(3, Math.round(weeks * 7))} дней`
+  return `≈ ${Math.round(weeks)} нед.`
+}
 
 const features = [
   { id: "design", name: "Уникальный дизайн", multiplier: 1.3 },
@@ -31,17 +39,18 @@ export function ProjectCalculator() {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
   const [complexity, setComplexity] = useState([50])
 
-  const basePrice = projectTypes.find((t) => t.id === projectType)?.basePrice || 3000
-  
+  const type = projectTypes.find((t) => t.id === projectType) ?? projectTypes[0]
+
   const featuresMultiplier = selectedFeatures.reduce((acc, featureId) => {
     const feature = features.find((f) => f.id === featureId)
     return acc * (feature?.multiplier || 1)
   }, 1)
 
   const complexityMultiplier = 0.5 + (complexity[0] / 100)
-  
-  const estimatedPrice = Math.round(basePrice * featuresMultiplier * complexityMultiplier)
-  const estimatedTime = Math.round((estimatedPrice / 5000) * 2) // weeks
+
+  // Round to 10 000 ₸ so the estimate does not look falsely precise
+  const estimatedPrice = Math.round((type.basePrice * featuresMultiplier * complexityMultiplier) / 10000) * 10000
+  const estimatedTime = formatDuration(type.baseWeeks * complexityMultiplier * (1 + (featuresMultiplier - 1) / 2))
 
   const toggleFeature = (featureId: string) => {
     setSelectedFeatures((prev) =>
@@ -183,10 +192,10 @@ export function ProjectCalculator() {
                     Ориентировочная стоимость
                   </div>
                   <div className="text-4xl font-bold gradient-text mb-1">
-                    ${estimatedPrice.toLocaleString()}
+                    от {estimatedPrice.toLocaleString("ru-RU")} ₸
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    от {estimatedTime} недель
+                    {estimatedTime}
                   </div>
                 </div>
 

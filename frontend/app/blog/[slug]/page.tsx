@@ -5,7 +5,8 @@ import { ArrowLeft, Clock, Tag, Twitter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { JsonLd, breadcrumbList } from "@/components/json-ld"
 import { siteConfig } from "@/lib/site-config"
-import { blogPosts } from "@/lib/blog-posts"
+import { blogPosts, coverUrl } from "@/lib/blog-posts"
+import { ArticleBody, TableOfContents } from "@/components/article-body"
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.excerpt,
       url: `${siteConfig.url}/blog/${slug}`,
-      images: ["/opengraph-image"],
+      images: [coverUrl(post)],
       publishedTime: post.publishedAt,
       authors: [post.author],
     },
@@ -55,6 +56,7 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   const postUrl = `${siteConfig.url}/blog/${post.id}`
+  const otherPosts = blogPosts.filter((p) => p.id !== post.id).slice(0, 4)
 
   return (
     <div className="pt-32 pb-24">
@@ -68,7 +70,7 @@ export default async function BlogPostPage({ params }: Props) {
             datePublished: post.publishedAt,
             inLanguage: "ru-RU",
             mainEntityOfPage: postUrl,
-            author: { "@type": "Person", name: post.author },
+            author: { "@id": `${siteConfig.url}/#organization` },
             publisher: { "@id": `${siteConfig.url}/#organization` },
             keywords: post.tags.join(", "),
           },
@@ -152,53 +154,21 @@ export default async function BlogPostPage({ params }: Props) {
 
           {/* Featured Image */}
           <div className="glass rounded-2xl overflow-hidden mb-12">
-            <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-              <span className="text-9xl font-bold text-foreground/5">AI</span>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={coverUrl(post)}
+              alt={post.title}
+              width={1200}
+              height={630}
+              className="w-full h-auto"
+            />
           </div>
 
+          <TableOfContents content={post.content} />
+
           {/* Content */}
-          <div className="prose prose-invert prose-lg max-w-none">
-            <div className="space-y-6">
-              {post.content.split('\n').map((paragraph, index) => {
-                if (paragraph.startsWith('## ')) {
-                  return (
-                    <h2 key={index} className="text-2xl font-bold mt-12 mb-4">
-                      {paragraph.replace('## ', '')}
-                    </h2>
-                  )
-                }
-                if (paragraph.startsWith('### ')) {
-                  return (
-                    <h3 key={index} className="text-xl font-semibold mt-8 mb-3">
-                      {paragraph.replace('### ', '')}
-                    </h3>
-                  )
-                }
-                if (paragraph.startsWith('- ')) {
-                  return (
-                    <li key={index} className="text-muted-foreground ml-4">
-                      {paragraph.replace('- ', '')}
-                    </li>
-                  )
-                }
-                if (paragraph.startsWith('1. ') || paragraph.startsWith('2. ') || paragraph.startsWith('3. ') || paragraph.startsWith('4. ')) {
-                  return (
-                    <li key={index} className="text-muted-foreground ml-4">
-                      {paragraph.replace(/^\d\. /, '')}
-                    </li>
-                  )
-                }
-                if (paragraph.trim()) {
-                  return (
-                    <p key={index} className="text-muted-foreground leading-relaxed">
-                      {paragraph}
-                    </p>
-                  )
-                }
-                return null
-              })}
-            </div>
+          <div className="max-w-none text-lg">
+            <ArticleBody content={post.content} />
           </div>
 
           {/* Tags */}
@@ -218,16 +188,36 @@ export default async function BlogPostPage({ params }: Props) {
 
           {/* CTA */}
           <div className="glass-strong rounded-2xl p-8 mt-12 text-center">
-            <h3 className="text-xl font-bold mb-3">Хотите внедрить AI в ваш бизнес?</h3>
-            <p className="text-muted-foreground mb-6">
-              Обсудим, как AI может помочь именно вашей компании
-            </p>
-            <Button size="lg" asChild>
-              <Link href="/contacts">
-                Получить консультацию
-              </Link>
-            </Button>
+            <h3 className="text-xl font-bold mb-3">{post.cta.title}</h3>
+            <p className="text-muted-foreground mb-6">{post.cta.text}</p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button size="lg" asChild>
+                <Link href={post.cta.href}>{post.cta.label}</Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/contacts">Получить консультацию</Link>
+              </Button>
+            </div>
           </div>
+
+          {/* More posts */}
+          {otherPosts.length > 0 && (
+            <div className="mt-16">
+              <h3 className="text-xl font-bold mb-6">Читайте также</h3>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {otherPosts.map((other) => (
+                  <Link
+                    key={other.id}
+                    href={`/blog/${other.id}`}
+                    className="glass rounded-xl p-5 hover:bg-card/60 transition-colors"
+                  >
+                    <div className="text-xs text-muted-foreground mb-2">{other.category} · {other.readTime}</div>
+                    <div className="font-semibold">{other.title}</div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </article>
       </div>
     </div>

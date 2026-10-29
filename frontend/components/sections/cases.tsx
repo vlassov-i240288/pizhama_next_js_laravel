@@ -46,9 +46,9 @@ export function CasesSection() {
           </motion.div>
         </div>
 
-        {/* Cases Grid (show only two items; cards link to /portfolio) */}
+        {/* Cases Grid: latest real projects with screenshots */}
         <div className="grid lg:grid-cols-2 gap-6">
-          {caseStudies.slice(0, 2).map((caseItem, index) => {
+          {caseStudies.slice(0, 4).map((caseItem, index) => {
             return (
               <motion.div
                 key={caseItem.id}
@@ -58,19 +58,31 @@ export function CasesSection() {
                 transition={{ delay: index * 0.1 }}
               >
                 <Link
-                  href="/portfolio"
+                  href={`/portfolio/${caseItem.id}`}
                   className="group block glass hover:bg-card/60 rounded-2xl overflow-hidden transition-all duration-300"
                 >
-                {/* Image Placeholder */}
+                {/* Image */}
                 <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-6xl font-bold text-foreground/5">
-                      {caseItem.title.charAt(0)}
-                    </span>
-                  </div>
+                  {caseItem.image.endsWith(".webp") ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={caseItem.image}
+                      alt={`Сайт ${caseItem.title}`}
+                      loading="lazy"
+                      width={1200}
+                      height={750}
+                      className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-6xl font-bold text-foreground/5">
+                        {caseItem.title.charAt(0)}
+                      </span>
+                    </div>
+                  )}
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 text-xs font-medium bg-background/80 backdrop-blur rounded-full">
-                      {caseItem.category}
+                      {"niche" in caseItem ? caseItem.niche : caseItem.category}
                     </span>
                   </div>
                   <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -95,6 +107,7 @@ export function CasesSection() {
                   </p>
 
                   {/* Results */}
+                  {caseItem.results.length > 0 && (
                   <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
                     {caseItem.results.map((result) => (
                       <div key={result.metric}>
@@ -107,6 +120,7 @@ export function CasesSection() {
                       </div>
                     ))}
                   </div>
+                  )}
                 </div>
                   </Link>
                 </motion.div>

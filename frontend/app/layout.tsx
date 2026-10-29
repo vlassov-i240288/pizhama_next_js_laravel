@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { StickyCTA } from "@/components/layout/sticky-cta";
 import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/components/json-ld";
+import { GoalTracker } from "@/components/goal-tracker";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
@@ -134,6 +135,7 @@ ym(${yandexMetrikaId}, "init", { clickmap: true, trackLinks: true, accurateTrack
         <main className="flex-1">{children}</main>
         <Footer />
         <StickyCTA />
+        <GoalTracker />
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>

@@ -1,4 +1,6 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// In production nginx serves the Laravel API on the same domain, so requests stay relative
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? (process.env.NODE_ENV === "production" ? "" : "http://localhost:8000");
 
 export async function getStatus(): Promise<{ status: string; app?: string; env?: string; time?: string } | null> {
   try {

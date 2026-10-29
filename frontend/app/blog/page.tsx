@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ArrowRight, Clock, User } from "lucide-react"
 import { siteConfig } from "@/lib/site-config"
 import { CTASection } from "@/components/sections/cta"
-import { blogPosts } from "@/lib/blog-posts"
+import { blogPosts, coverUrl } from "@/lib/blog-posts"
 
 export const metadata: Metadata = {
   title: "Блог — Статьи о разработке и технологиях",
@@ -40,9 +40,14 @@ export default function BlogPage() {
             className="group block glass rounded-2xl overflow-hidden mb-12 hover:bg-card/60 transition-colors"
           >
             <div className="grid lg:grid-cols-2 gap-0">
-              <div className="aspect-video lg:aspect-auto bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                <span className="text-9xl font-bold text-foreground/5">AI</span>
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={coverUrl(featuredPost)}
+                alt={featuredPost.title}
+                width={1200}
+                height={630}
+                className="w-full h-full object-cover aspect-[1200/630]"
+              />
               <div className="p-8 lg:p-12">
                 <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
                   <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
@@ -82,11 +87,15 @@ export default function BlogPage() {
               href={`/blog/${post.id}`}
               className="group glass rounded-2xl overflow-hidden hover:bg-card/60 transition-colors"
             >
-              <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-                <span className="text-4xl font-bold text-foreground/5">
-                  {post.category}
-                </span>
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={coverUrl(post)}
+                alt={post.title}
+                width={1200}
+                height={630}
+                loading="lazy"
+                className="w-full h-auto"
+              />
               <div className="p-6">
                 <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
                   <span className="px-2 py-1 rounded-full bg-secondary">

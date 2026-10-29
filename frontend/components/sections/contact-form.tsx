@@ -32,6 +32,7 @@ const serviceOptions = [
 
 import { siteConfig } from '@/lib/site-config'
 import { API_URL } from '@/lib/api'
+import { trackGoal } from '@/lib/analytics'
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -84,6 +85,7 @@ export function ContactForm() {
     if (!valid) return
     setIsSubmitting(true)
     await postLead()
+    trackGoal('lead_form', { provider, service })
     setRedirectProvider(provider)
     setIsRedirecting(true)
     setIsSubmitting(false)

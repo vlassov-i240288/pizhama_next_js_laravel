@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { services, caseStudies, siteConfig } from "@/lib/site-config"
 import { ContactForm } from "@/components/sections/contact-form"
 import { JsonLd, breadcrumbList } from "@/components/json-ld"
+import { getLandingGroup } from "@/lib/landings"
 
 const iconMap = {
   Globe,
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${service.title} | ${siteConfig.name}`,
       description: service.description,
       url: `${siteConfig.url}/services/${slug}`,
-      images: ["/opengraph-image"],
+      images: [`/og?title=${encodeURIComponent(service.title)}&label=${encodeURIComponent("Услуги")}`],
     },
   }
 }
@@ -62,6 +63,7 @@ export default async function ServicePage({ params }: Props) {
   const relatedCases = caseStudies.filter((c) => 
     c.technologies.some((t) => service.technologies.includes(t))
   ).slice(0, 2)
+  const landingGroup = getLandingGroup(service.id)
 
   return (
     <div className="pt-32 pb-24">
@@ -165,6 +167,29 @@ export default async function ServicePage({ params }: Props) {
             </div>
           </div>
         </div>
+
+        {/* Niche landings */}
+        {landingGroup && (
+          <div className="mb-20">
+            <h2 className="text-2xl font-bold mb-3">{landingGroup.sectionTitle}</h2>
+            <p className="text-muted-foreground mb-8 max-w-3xl">{landingGroup.sectionDescription}</p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {landingGroup.landings.map((industry) => (
+                <Link
+                  key={industry.id}
+                  href={`/services/${service.id}/${industry.id}`}
+                  className="group glass rounded-xl p-6 hover:bg-card/60 transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-semibold group-hover:text-primary transition-colors">{industry.title}</h3>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all flex-shrink-0" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">{industry.audience.slice(0, 3).join(", ")}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Related Cases */}
         {relatedCases.length > 0 && (

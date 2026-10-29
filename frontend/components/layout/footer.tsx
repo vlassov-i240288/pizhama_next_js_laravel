@@ -6,6 +6,7 @@ import { ArrowUpRight, Mail, Phone, MapPin, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { siteConfig, navigation } from "@/lib/site-config"
+import { landingGroups } from "@/lib/landings"
 
 export function Footer() {
   const [email, setEmail] = useState("")
@@ -160,6 +161,31 @@ export function Footer() {
                 <ArrowUpRight className="h-3 w-3" />
               </a>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Popular solutions */}
+      <div className="border-t border-border">
+        <div className="container mx-auto px-4 lg:px-8 py-8">
+          <div className="grid sm:grid-cols-3 gap-8">
+            {landingGroups.map((group) => (
+              <div key={group.serviceId}>
+                <h4 className="font-semibold mb-3 text-sm">{group.sectionTitle}</h4>
+                <ul className="flex flex-wrap gap-x-4 gap-y-2">
+                  {group.landings.map((landing) => (
+                    <li key={landing.id}>
+                      <Link
+                        href={`/services/${group.serviceId}/${landing.id}`}
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {landing.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </div>
