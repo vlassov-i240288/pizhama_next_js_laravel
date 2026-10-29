@@ -7,6 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+use App\Services\TelegramSender;
 use App\Services\WhatsAppSender;
 
 class SendOwnerNotificationJob implements ShouldQueue
@@ -22,28 +24,44 @@ class SendOwnerNotificationJob implements ShouldQueue
 
     public function handle()
     {
-        $sender = new WhatsAppSender();
+        $text = $this->buildText();
 
-        $serviceLabel = $this->data['service'] ?? '—';
-        $budgetLabel = $this->data['budget'] ?? '—';
+        // Each channel is independent: a failure in one must not block the others
+        try {
+            (new TelegramSender())->sendTextMessage($text);
+        } catch (\Throwable $e) {
+            logger()->error('Failed to send Telegram notification', ['error' => $e->getMessage()]);
+        }
 
-        $text = "Новая заявка на проект — PIZHAMA\n\n"
-            . "Услуга: {$serviceLabel}\n"
-            . "Бюджет: {$budgetLabel}\n"
-            . "Краткое описание: {$this->data['description'] ?? '—'}\n\n"
-            . "Контактное лицо: {$this->data['name'] ?? '—'}\n"
-            . "Компания: {$this->data['company'] ?? '—'}\n"
-            . "Email: {$this->data['email'] ?? '—'}\n"
-            . "Телефон: {$this->data['phone'] ?? '—'}\n\n"
-            . "Клиент просит обсудить детали."
-            ;
+        $email = config('services.leads.notify_email');
+        if (!empty($email)) {
+            try {
+                Mail::raw($text, fn ($message) => $message->to($email)->subject('Новая заявка с pizhama.kz'));
+            } catch (\Throwable $e) {
+                logger()->error('Failed to send email notification', ['error' => $e->getMessage()]);
+            }
+        }
 
         try {
             $owner = env('OWNER_WHATSAPP_NUMBER', '+77019204449');
-            $sender->sendTextMessage($owner, $text);
+            (new WhatsAppSender())->sendTextMessage($owner, $text);
         } catch (\Throwable $e) {
-            // Log error but don't throw
             logger()->error('Failed to send WhatsApp notification', ['error' => $e->getMessage()]);
         }
+    }
+
+    protected function buildText(): string
+    {
+        $field = fn (string $key) => ($this->data[$key] ?? null) ?: '—';
+
+        return "Новая заявка на проект — PIZHAMA\n\n"
+            . "Услуга: {$field('service')}\n"
+            . "Бюджет: {$field('budget')}\n"
+            . "Описание: {$field('description')}\n\n"
+            . "Имя: {$field('name')}\n"
+            . "Компания: {$field('company')}\n"
+            . "Email: {$field('email')}\n"
+            . "Телефон: {$field('phone')}\n"
+            . "Дата: {$field('created_at')}";
     }
 }

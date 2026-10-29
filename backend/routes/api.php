@@ -5,4 +5,4 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\LeadController;
 
 Route::get('status', [StatusController::class, 'index']);
-Route::post('lead', [LeadController::class, 'store']);
+Route::post('lead', [LeadController::class, 'store'])->middleware('throttle:10,1');
