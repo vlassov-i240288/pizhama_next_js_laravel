@@ -104,7 +104,7 @@ export function ContactForm() {
         </div>
         <h3 className="text-2xl font-bold mb-3">Заявка отправлена!</h3>
         <p className="text-muted-foreground">
-          Мы свяжемся с вами в течение 2 минут.
+          Мы свяжемся с вами в течение 2 минут в рабочее время.
         </p>
       </motion.div>
     )

@@ -5,7 +5,7 @@ import { ContactForm } from "@/components/sections/contact-form"
 
 export const metadata: Metadata = {
   title: "Контакты",
-  description: "Свяжитесь с PIZHAMA для обсуждения вашего проекта. Бесплатная консультация, ответ в течение 2 минут.",
+  description: "Свяжитесь с PIZHAMA для обсуждения вашего проекта. Бесплатная консультация, ответ в течение 2 минут в рабочее время.",
   keywords: ["контакты", "связаться", "заказать разработку", "консультация"],
   alternates: {
     canonical: `${siteConfig.url}/contacts`,
@@ -25,17 +25,17 @@ const contactMethods = [
     title: "Email",
     value: siteConfig.links.email,
     href: `mailto:${siteConfig.links.email}`,
-    description: "Ответим в течение 2 минут",
+    description: "Ответим в течение 2 минут в рабочее время",
   },
   {
-    icon: MessageCircle,
+    icon: Send,
     title: "Telegram",
     value: "",
     href: siteConfig.links.telegram,
     description: "Быстрая связь",
   },
   {
-    icon: Send,
+    icon: MessageCircle,
     title: "WhatsApp",
     value: "",
     href: siteConfig.links.whatsapp,
@@ -55,7 +55,7 @@ export default function ContactsPage() {
           </h1>
           <p className="text-lg text-muted-foreground">
             Выберите удобный способ связи или оставьте заявку — 
-            мы свяжемся с вами в течение 2 минут
+            мы свяжемся с вами в течение 2 минут в рабочее время
           </p>
         </div>
 
