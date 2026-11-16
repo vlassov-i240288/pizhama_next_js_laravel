@@ -62,6 +62,7 @@ class SendOwnerNotificationJob implements ShouldQueue
             . "Компания: {$field('company')}\n"
             . "Email: {$field('email')}\n"
             . "Телефон: {$field('phone')}\n"
+            . "Источник: {$field('source')}\n"
             . "Дата: {$field('created_at')}";
     }
 }

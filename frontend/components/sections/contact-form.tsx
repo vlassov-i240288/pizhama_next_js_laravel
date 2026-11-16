@@ -31,8 +31,7 @@ const serviceOptions = [
 ]
 
 import { siteConfig } from '@/lib/site-config'
-import { API_URL } from '@/lib/api'
-import { trackGoal } from '@/lib/analytics'
+import { getAttribution, trackGoal } from '@/lib/analytics'
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -51,10 +50,15 @@ export function ContactForm() {
 
   const postLead = async () => {
     try {
-      await fetch(`${API_URL}/api/lead`, {
+      await fetch('/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ service, budget, description, name, company, phone }),
+        body: JSON.stringify({
+          service: serviceOptions.find((s) => s.value === service)?.label ?? service,
+          budget: budgetOptions.find((b) => b.value === budget)?.label ?? budget,
+          description, name, company, phone,
+          source: getAttribution(),
+        }),
       })
     } catch (err) {
       console.error('lead save failed', err)

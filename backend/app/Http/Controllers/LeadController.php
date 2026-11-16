@@ -17,6 +17,7 @@ class LeadController extends Controller
             'company' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:64',
+            'source' => 'nullable|string|max:500',
         ]);
 
         $data['created_at'] = now()->toDateTimeString();

@@ -22,3 +22,30 @@ export function goalForHref(href: string): Goal | null {
   if (href.startsWith("mailto:")) return "email_click"
   return null
 }
+
+const ATTRIBUTION_KEY = "lead_source"
+const ATTRIBUTION_PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "yclid"]
+
+// Remembers where the visitor came from (ad click, search, referral) for the lead notification
+export function rememberAttribution() {
+  try {
+    const query = new URLSearchParams(window.location.search)
+    const parts = ATTRIBUTION_PARAMS.filter((key) => query.get(key)).map((key) => `${key}=${query.get(key)}`)
+    if (parts.length > 0) {
+      sessionStorage.setItem(ATTRIBUTION_KEY, `${parts.join("&")} | ${window.location.pathname}`)
+    } else if (!sessionStorage.getItem(ATTRIBUTION_KEY)) {
+      const referrer = document.referrer && !document.referrer.includes(window.location.host) ? document.referrer : "direct"
+      sessionStorage.setItem(ATTRIBUTION_KEY, `${referrer} | ${window.location.pathname}`)
+    }
+  } catch {
+    // storage can be blocked; attribution is optional
+  }
+}
+
+export function getAttribution(): string {
+  try {
+    return sessionStorage.getItem(ATTRIBUTION_KEY) ?? ""
+  } catch {
+    return ""
+  }
+}

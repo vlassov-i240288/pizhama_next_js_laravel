@@ -1,11 +1,12 @@
 "use client"
 
 import { useEffect } from "react"
-import { goalForHref, trackGoal } from "@/lib/analytics"
+import { goalForHref, rememberAttribution, trackGoal } from "@/lib/analytics"
 
 // Tracks clicks on messenger, phone and email links anywhere on the site
 export function GoalTracker() {
   useEffect(() => {
+    rememberAttribution()
     const onClick = (event: MouseEvent) => {
       const link = (event.target as Element | null)?.closest?.("a[href]")
       if (!link) return
