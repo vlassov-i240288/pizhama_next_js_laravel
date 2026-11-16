@@ -31,6 +31,7 @@ function buildText(lead: Lead) {
     "",
     `Имя: ${field("name")}`,
     `Телефон: ${field("phone")}`,
+    ...(lead.phone ? [`WhatsApp: https://wa.me/${normalizePhone(lead.phone)}`] : []),
     `Компания: ${field("company")}`,
     `Услуга: ${field("service")}`,
     `Бюджет: ${field("budget")}`,
@@ -40,6 +41,38 @@ function buildText(lead: Lead) {
     `Источник: ${field("source")}`,
     `Дата: ${lead.created_at}`,
   ].join("\n")
+}
+
+// Kazakhstan numbers: "8 701 ..." and "701 ..." become international "7701..."
+function normalizePhone(phone: string) {
+  let digits = phone.replace(/\D/g, "")
+  if (digits.length === 11 && digits.startsWith("8")) digits = "7" + digits.slice(1)
+  if (digits.length === 10) digits = "7" + digits
+  return digits
+}
+
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+
+function buildHtml(lead: Lead) {
+  const field = (key: keyof Lead) => escapeHtml(lead[key] || "—").replace(/\n/g, "<br>")
+  const row = (label: string, value: string) =>
+    `<tr><td style="padding:6px 12px 6px 0;color:#6b7280;vertical-align:top;white-space:nowrap">${label}</td><td style="padding:6px 0;color:#111827">${value}</td></tr>`
+  const button = (href: string, label: string, color: string) =>
+    `<a href="${href}" style="display:inline-block;margin:4px 8px 4px 0;padding:10px 18px;border-radius:8px;background:${color};color:#ffffff;text-decoration:none;font-weight:600">${label}</a>`
+
+  const digits = lead.phone ? normalizePhone(lead.phone) : ""
+  const buttons = digits
+    ? `<div style="margin:4px 0 16px">${button(`https://wa.me/${digits}`, "Написать в WhatsApp", "#16a34a")}${button(`https://t.me/+${digits}`, "Написать в Telegram", "#2563eb")}${button(`tel:+${digits}`, "Позвонить", "#4b5563")}</div>`
+    : ""
+
+  return `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.5;max-width:600px">
+<h2 style="margin:0 0 12px;font-size:20px;color:#111827">Новая заявка с сайта pizhama.kz</h2>
+<table style="border-collapse:collapse">${row("Имя", field("name"))}${row("Телефон", field("phone"))}</table>
+${buttons}
+<table style="border-collapse:collapse">${row("Компания", field("company"))}${row("Услуга", field("service"))}${row("Бюджет", field("budget"))}${row("Описание", field("description"))}</table>
+<p style="margin:16px 0 0;font-size:13px;color:#6b7280">Источник: ${field("source")}<br>Дата: ${escapeHtml(lead.created_at)}</p>
+</div>`
 }
 
 const dkimKey = process.env.LEAD_DKIM_PRIVATE_KEY
@@ -52,8 +85,8 @@ const transporter = nodemailer.createTransport({
     : undefined,
 })
 
-function sendMail(to: string, from: string, subject: string, text: string) {
-  return transporter.sendMail({ from: { name: "PIZHAMA сайт", address: from }, to, subject, text })
+function sendMail(to: string, from: string, subject: string, text: string, html: string) {
+  return transporter.sendMail({ from: { name: "PIZHAMA сайт", address: from }, to, subject, text, html })
 }
 
 export async function POST(request: Request) {
@@ -89,7 +122,7 @@ export async function POST(request: Request) {
   if (to) {
     try {
       const from = process.env.LEAD_FROM_EMAIL ?? "leads@pizhama.kz"
-      await sendMail(to, from, `Заявка: ${lead.name ?? lead.phone}`, buildText(lead))
+      await sendMail(to, from, `Заявка: ${lead.name ?? lead.phone}`, buildText(lead), buildHtml(lead))
     } catch (error) {
       console.error("lead: failed to send email", error)
     }
