@@ -1,9 +1,10 @@
-import { spawn } from "node:child_process"
 import { appendFile, mkdir } from "node:fs/promises"
 import path from "node:path"
+import nodemailer from "nodemailer"
 
 // Leads are handled by Next.js itself: nginx sends /api/* to Laravel, so this route lives at /lead.
 // The owner gets an email through the server's local sendmail (postfix); every lead is also saved to data/leads.jsonl.
+// Mail is DKIM-signed for pizhama.kz (selector "site") when LEAD_DKIM_PRIVATE_KEY (base64 PEM) is set, so it passes DMARC.
 
 const FIELDS = ["service", "budget", "description", "name", "company", "phone", "source"] as const
 type Lead = Partial<Record<(typeof FIELDS)[number], string>> & { created_at: string; ip: string }
@@ -23,8 +24,6 @@ function isRateLimited(ip: string) {
   return hits.length > RATE_LIMIT
 }
 
-const encodeHeader = (text: string) => `=?UTF-8?B?${Buffer.from(text).toString("base64")}?=`
-
 function buildText(lead: Lead) {
   const field = (key: keyof Lead) => lead[key] || "—"
   return [
@@ -43,24 +42,18 @@ function buildText(lead: Lead) {
   ].join("\n")
 }
 
-function sendMail(to: string, from: string, subject: string, text: string) {
-  const message = [
-    `From: ${encodeHeader("PIZHAMA сайт")} <${from}>`,
-    `To: ${to}`,
-    `Subject: ${encodeHeader(subject)}`,
-    "MIME-Version: 1.0",
-    "Content-Type: text/plain; charset=UTF-8",
-    "Content-Transfer-Encoding: base64",
-    "",
-    Buffer.from(text).toString("base64").replace(/.{76}/g, "$&\n"),
-  ].join("\n")
+const dkimKey = process.env.LEAD_DKIM_PRIVATE_KEY
+const transporter = nodemailer.createTransport({
+  sendmail: true,
+  path: "/usr/sbin/sendmail",
+  newline: "unix",
+  dkim: dkimKey
+    ? { domainName: "pizhama.kz", keySelector: "site", privateKey: Buffer.from(dkimKey, "base64").toString() }
+    : undefined,
+})
 
-  return new Promise<void>((resolve, reject) => {
-    const proc = spawn("/usr/sbin/sendmail", ["-t", "-oi", "-f", from])
-    proc.on("error", reject)
-    proc.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`sendmail exited with ${code}`))))
-    proc.stdin.end(message)
-  })
+function sendMail(to: string, from: string, subject: string, text: string) {
+  return transporter.sendMail({ from: { name: "PIZHAMA сайт", address: from }, to, subject, text })
 }
 
 export async function POST(request: Request) {
