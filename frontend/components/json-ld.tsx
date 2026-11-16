@@ -43,7 +43,7 @@ export const organizationJsonLd = {
     addressCountry: "KZ",
   },
   areaServed: ["KZ", "Актобе"],
-  sameAs: [siteConfig.social.instagram, siteConfig.social.facebook, siteConfig.links.telegram],
+  sameAs: [siteConfig.social.instagram, siteConfig.links.telegram],
 }
 
 export const websiteJsonLd = {

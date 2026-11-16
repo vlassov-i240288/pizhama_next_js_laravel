@@ -15,8 +15,7 @@ export const siteConfig = {
     zip: "",
   },
   social: {
-    instagram: "https://instagram.com/pizhama.kz",
-    facebook: "https://facebook.com/pizhama.kz",
+    instagram: "https://www.instagram.com/pizhama.web/",
   },
   keywords: [
     "разработка сайтов Казахстан",
