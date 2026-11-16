@@ -231,7 +231,7 @@ export default async function ServicePage({ params }: Props) {
             </p>
             <div className="space-y-4 text-sm text-muted-foreground">
               <p>Бесплатная консультация</p>
-              <p>Ответ в течение 24 часов</p>
+              <p>Ответ в течение 2 минут</p>
               <p>NDA по запросу</p>
             </div>
           </div>

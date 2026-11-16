@@ -5,7 +5,7 @@ import { ContactForm } from "@/components/sections/contact-form"
 
 export const metadata: Metadata = {
   title: "Контакты",
-  description: "Свяжитесь с PIZHAMA для обсуждения вашего проекта. Бесплатная консультация, ответ в течение 24 часов.",
+  description: "Свяжитесь с PIZHAMA для обсуждения вашего проекта. Бесплатная консультация, ответ в течение 2 минут.",
   keywords: ["контакты", "связаться", "заказать разработку", "консультация"],
   alternates: {
     canonical: `${siteConfig.url}/contacts`,
@@ -25,7 +25,7 @@ const contactMethods = [
     title: "Email",
     value: siteConfig.links.email,
     href: `mailto:${siteConfig.links.email}`,
-    description: "Ответим в течение 24 часов",
+    description: "Ответим в течение 2 минут",
   },
   {
     icon: MessageCircle,

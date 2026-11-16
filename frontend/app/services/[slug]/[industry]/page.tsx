@@ -284,7 +284,7 @@ export default async function LandingPage({ params }: Props) {
             <p className="text-muted-foreground mb-6">{group.contactText}</p>
             <div className="space-y-4 text-sm text-muted-foreground">
               <p>Бесплатная консультация и разбор задачи</p>
-              <p>Ответ в течение 24 часов</p>
+              <p>Ответ в течение 2 минут</p>
               <p>NDA по запросу</p>
             </div>
           </div>
