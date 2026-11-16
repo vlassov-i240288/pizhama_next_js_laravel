@@ -70,7 +70,6 @@ export function ContactForm() {
     const e: Record<string, string> = {}
     if (!service) e.service = 'Выберите услугу'
     if (!budget) e.budget = 'Выберите бюджет'
-    if (!description || description.trim().length < 10) e.description = 'Опишите проект (мин. 10 символов)'
     if (!name) e.name = 'Введите имя'
     if (!phone || phone.trim().length < 6) e.phone = 'Введите корректный телефон'
     setErrors(e)
@@ -185,7 +184,7 @@ export function ContactForm() {
         </div>
 
         <div>
-          <Label htmlFor="description">Описание проекта</Label>
+          <Label htmlFor="description">Описание проекта <span className="text-muted-foreground font-normal">(необязательно)</span></Label>
           <Textarea
             id="description"
             value={description}
