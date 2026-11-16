@@ -7,10 +7,11 @@ import { Footer } from "@/components/layout/footer";
 import { StickyCTA } from "@/components/layout/sticky-cta";
 import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/components/json-ld";
 import { GoalTracker } from "@/components/goal-tracker";
+import { YANDEX_METRIKA_ID } from "@/lib/analytics";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
-const yandexMetrikaId = process.env.NEXT_PUBLIC_YANDEX_METRIKA_ID;
+const yandexMetrikaId = YANDEX_METRIKA_ID;
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -109,8 +110,8 @@ gtag('config', '${process.env.NEXT_PUBLIC_GA_ID ?? "G-WT3X2H11V0"}');`}
 m[i].l=1*new Date();
 for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
 k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-ym(${yandexMetrikaId}, "init", { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });`}
+(window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=${yandexMetrikaId}", "ym");
+ym(${yandexMetrikaId}, "init", { ssr: true, webvisor: true, clickmap: true, ecommerce: "dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce: true, trackLinks: true });`}
               </Script>
             )}
           </>

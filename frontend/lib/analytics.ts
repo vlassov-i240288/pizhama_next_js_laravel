@@ -7,11 +7,12 @@ declare global {
   }
 }
 
+export const YANDEX_METRIKA_ID = Number(process.env.NEXT_PUBLIC_YANDEX_METRIKA_ID ?? 114270889)
+
 // Sends a conversion to Yandex Metrika and Google Analytics when they are loaded
 export function trackGoal(goal: Goal, params?: Record<string, unknown>) {
   if (typeof window === "undefined") return
-  const metrikaId = Number(process.env.NEXT_PUBLIC_YANDEX_METRIKA_ID)
-  if (metrikaId && window.ym) window.ym(metrikaId, "reachGoal", goal, params)
+  if (YANDEX_METRIKA_ID && window.ym) window.ym(YANDEX_METRIKA_ID, "reachGoal", goal, params)
   if (window.gtag) window.gtag("event", goal, params)
 }
 
